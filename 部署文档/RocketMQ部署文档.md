@@ -44,8 +44,8 @@ JAVA_OPT="${JAVA_OPT} -server -Xms1g -Xmx1g -Xmn512m -XX:MetaspaceSize=128m -XX:
 ```
 
 新增配置如下:
+![输入图片说明](../frontend-server/src/main/resources/static/img/image-20201209150753513.png)
 
-**![image-20201209150706832](图片/image-20201209150753513.png)**
 
 ```
 namesrvAddr=192.168.174.128:9876
