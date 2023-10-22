@@ -1,7 +1,18 @@
 # seckill
 
 #### 介绍
-可插拔式秒杀系统
+可插拔式秒杀/限时抢购系统
+
+#### 亮点
+1. 微服务架构下的高并发使用场景（seata-AT、seata-TCC、全局事务、mq事务消息）
+2. 限时商品上架（elastic-job）
+3. 高并发环境下的优化手段（redis缓存、mq、限流）
+4. 集成支付宝沙箱环境
+5. 数据库与redis缓存的一致性（canal）
+6. 异步下单（websocket监测下单结果）
+
+#### 核心技术栈
+springcloudalibaba、redis、rocketmq、canal、wobsocket、elastic-job、zookeeper
 
 #### 软件架构
 软件架构说明
@@ -10,9 +21,9 @@
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  导入nacos的配置，启动nacos，修改开发环境的配置，配置环境在/shop-parent/配置文件
+2.  导入数据库脚本，位置在/shop-parent/配置文件
+3.  部署各类开发环境，可参考部署文档（mysql、canal、rocketmq、seata、redis、zookeeper、nacos...）
 
 #### 使用说明
 
