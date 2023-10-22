@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../frontend-server/pom.xml" />
+        <option value="$PROJECT_DIR$/elastic-job-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/../elastic-job-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/../elastic-job-boot/pom.xml" />
+        <option value="$PROJECT_DIR$/../rocketmq/pom.xml" />
+        <option value="$PROJECT_DIR$/../rocketmq/comsumer/pom.xml" />
+        <option value="$PROJECT_DIR$/../rocketmq/provider/pom.xml" />
+        <option value="$PROJECT_DIR$/../rockermq-boot-provider/pom.xml" />
+        <option value="$PROJECT_DIR$/../rocketmq-boot-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../RocketMQ事务消息案例/rocketmq/rocketmq-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../RocketMQ事务消息案例/rocketmq/rocketmq-producer/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/elastic-job-demo/pom.xml" />
+        <option value="$PROJECT_DIR$/test/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="corretto-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/../../../../工具/alipay.trade.page.pay-JAVA-UTF-8/web/web" />
+  </component>
+</project>

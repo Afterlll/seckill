@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>客户端B</title>
+    <script src="assets/js/socket.js"></script>
+    <script src="assets/js/jquery.js"></script>
+
+    <script>
+        let socket;
+        function connect() {
+            if (!socket) {
+                socket = createScoket("234")
+            }
+        }
+
+        function sendMsg() {
+            socket.send($('#content').val())
+        }
+    </script>
+</head>
+<body>
+<input type="button" value="连接服务器" onclick="connect()"><br>
+<input type="text" id="content">
+<input type="button" value="发送消息" onclick="sendMsg()">
+</body>
+</html>

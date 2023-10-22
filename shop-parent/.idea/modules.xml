@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../../../工具/alipay.trade.page.pay-JAVA-UTF-8/alipay.trade.page.pay-JAVA-UTF-8.iml" filepath="$PROJECT_DIR$/../../../../工具/alipay.trade.page.pay-JAVA-UTF-8/alipay.trade.page.pay-JAVA-UTF-8.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api-gateway/api-gateway.iml" filepath="$PROJECT_DIR$/api-gateway/api-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-provider/intergral-server/intergral-server.iml" filepath="$PROJECT_DIR$/shop-provider/intergral-server/intergral-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-provider/job-server/job-server.iml" filepath="$PROJECT_DIR$/shop-provider/job-server/job-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-provider/pay-server/pay-server.iml" filepath="$PROJECT_DIR$/shop-provider/pay-server/pay-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-provider/product-server/product-server.iml" filepath="$PROJECT_DIR$/shop-provider/product-server/product-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../RocketMQ事务消息案例/rocketmq/rocketmq-consumer/rocketmq-consumer.iml" filepath="$PROJECT_DIR$/../../../RocketMQ事务消息案例/rocketmq/rocketmq-consumer/rocketmq-consumer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../RocketMQ事务消息案例/rocketmq/rocketmq-producer/rocketmq-producer.iml" filepath="$PROJECT_DIR$/../../../RocketMQ事务消息案例/rocketmq/rocketmq-producer/rocketmq-producer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-provider/seckill-server/seckill-server.iml" filepath="$PROJECT_DIR$/shop-provider/seckill-server/seckill-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shop-uaa/shop-uaa.iml" filepath="$PROJECT_DIR$/shop-uaa/shop-uaa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/websocket-server/websocket-server.iml" filepath="$PROJECT_DIR$/websocket-server/websocket-server.iml" />
+    </modules>
+  </component>
+</project>
