@@ -21,17 +21,17 @@ springcloudalibaba、redis、rocketmq、canal、wobsocket、elastic-job、zookee
 
 
 #### 模块介绍
-frontend-server         前端模块
-api-gateway             网关模块
-canal-client            canal客户端模块
-shop-common             通用模块
-shop-uaa                用户模块
-websocket-server        wocket服务端模块
-intergral-server        积分模块
-job-server              定时任务模块
-pay-server              支付模块
-product-server          商品模块
-seckill-server          秒杀模块
+1. frontend-server         前端模块
+2. api-gateway             网关模块
+3. canal-client            canal客户端模块
+4. shop-common             通用模块
+5. shop-uaa                用户模块
+6. websocket-server        wocket服务端模块
+7. intergral-server        积分模块
+8. job-server              定时任务模块
+9. pay-server              支付模块
+10. product-server         商品模块
+11. seckill-server         秒杀模块
 
 #### 代码结构
 ```
