@@ -28,12 +28,12 @@ springcloudalibaba、redis、rocketmq、canal、wobsocket、elastic-job、zookee
 
 3. 不同场景下的秒杀架构
     1. 如果你想快速搭建一个简单的秒杀系统，只需要把你的商品购买页面增加一个“定时上架”功能，仅在秒杀开始时才让用户看到购买按钮，当商品的库存卖完了也就结束了。这就是当时第一个版本的秒杀系统实现方式。
-    ![输入图片说明](frontend-server/src/main/resources/static/img/image.png)
+    ![输入图片说明](frontend-server/src/main/resources/static/img/image1.png)
     2. 然而这个架构仍然支持不了超过 100w/s 的请求量，所以为了进一步提升秒杀系统的性能，我们又对架构做进一步升级，比如：
         对页面进行彻底的动静分离，使得用户秒杀时不需要刷新整个页面，而只需要点击抢宝按钮，借此把页面刷新的数据降到最少；
         在服务端对秒杀商品进行本地缓存，不需要再调用依赖系统的后台服务获取数据，甚至不需要去公共的缓存集群中查询数据，这样不仅可以减少系统调用，而且能够避免压垮公共缓存集群。
         增加系统限流保护，防止最坏情况发生。
-     ![输入图片说明](frontend-server/src/main/resources/static/img/image.png)
+     ![输入图片说明](frontend-server/src/main/resources/static/img/image2.png)
     3. 从前面的几次升级来看，其实越到后面需要定制的地方越多，也就是越“不通
 用”。例如，把秒杀商品缓存在每台机器的内存中，这种方式显然不适合太多的商品同时进行秒杀的情况，因为单机的内存始终有限。所以要取得极致的性能，就要在其他地方（比如，通用性、易用性、成本等方面）有所牺牲。
 
@@ -56,10 +56,11 @@ springcloudalibaba、redis、rocketmq、canal、wobsocket、elastic-job、zookee
     
     3. 动静分离的几种架构方案.
         1. 实体机单机部署；
-        ![输入图片说明](frontend-server/src/main/resources/static/img/image.png)
+        ![输入图片说明](frontend-server/src/main/resources/static/img/image3.png)
         2. 统一 Cache 层；
-        ![输入图片说明](frontend-server/src/main/resources/static/img/image.png)
+        ![输入图片说明](frontend-server/src/main/resources/static/img/image4.png)
         3. 上 CDN。
+        ![输入图片说明](frontend-server/src/main/resources/static/img/image5.png)
 
 
 
