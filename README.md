@@ -6,12 +6,481 @@
 1. 微服务架构下的高并发使用场景（seata-AT、seata-TCC、全局事务、mq事务消息）
 2. 限时商品上架（elastic-job）
 3. 高并发环境下的优化手段（redis缓存、mq、限流）
-4. 集成支付宝沙箱环境
+4. 支付环境：支付宝沙箱、积分支付、退款、退积分
 5. 数据库与redis缓存的一致性（canal）
-6. 异步下单（websocket监测下单结果）
+6. 异步下单（websocket监测下单结果，延迟消息队列）
 
 #### 核心技术栈
 springcloudalibaba、redis、rocketmq、canal、wobsocket、elastic-job、zookeeper
+
+#### 项目截图
+
+#### 代码结构
+```
++---api-gateway
+|   |   api-gateway.iml
+|   |   pom.xml
+|   |
+|   +---src
+|   |   \---main
+|   |       +---java
+|   |       |   \---cn
+|   |       |       \---wolfcode
+|   |       |           |   ApiGatewayApplication.java
+|   |       |           |
+|   |       |           +---config
+|   |       |           |       CorsConfig.java
+|   |       |           |       GatewayConfiguration.java
+|   |       |           |
+|   |       |           \---filters
+|   |       |                   CommonFilter.java
+|   |       |
+|   |       \---resources
+|   |               bootstrap.yml
+|   |
++---canal-client
+|   |   canal-client.iml
+|   |   pom.xml
+|   |
+|   +---src
+|   |   \---main
+|   |       +---java
+|   |       |   \---cn
+|   |       |       \---wolfcode
+|   |       |           |   CanalClientApp.java
+|   |       |           |
+|   |       |           \---handler
+|   |       |                   OrderaInfoHandler.java
+|   |       |
+|   |       \---resources
+|   |               bootstrap.yml
+|   |
++---shop-common
+|   |   pom.xml
+|   |
+|   +---src
+|   |   \---main
+|   |       \---java
+|   |           \---cn
+|   |               \---wolfcode
+|   |                   +---common
+|   |                   |   +---constants
+|   |                   |   |       CommonConstants.java
+|   |                   |   |
+|   |                   |   +---domain
+|   |                   |   |       UserInfo.java
+|   |                   |   |
+|   |                   |   +---exception
+|   |                   |   |       BusinessException.java
+|   |                   |   |       CommonControllerAdvice.java
+|   |                   |   |
+|   |                   |   \---web
+|   |                   |       |   CodeMsg.java
+|   |                   |       |   CommonCodeMsg.java
+|   |                   |       |   Result.java
+|   |                   |       |
+|   |                   |       +---anno
+|   |                   |       |       RequireLogin.java
+|   |                   |       |
+|   |                   |       \---interceptor
+|   |                   |               FeignRequestInterceptor.java
+|   |                   |               RequireLoginInterceptor.java
+|   |                   |
+|   |                   \---redis
+|   |                           CommonRedisKey.java
+|   |
++---shop-provider
+|   |   pom.xml
+|   |
+|   +---intergral-server
+|   |   |   intergral-server.iml
+|   |   |   pom.xml
+|   |   |
+|   |   +---src
+|   |   |   \---main
+|   |   |       +---java
+|   |   |       |   \---cn
+|   |   |       |       \---wolfcode
+|   |   |       |           |   IntergralApplication.java
+|   |   |       |           |
+|   |   |       |           +---mapper
+|   |   |       |           |       AccountTransactionMapper.java
+|   |   |       |           |       AccountTransactionMapper.xml
+|   |   |       |           |       UsableIntegralMapper.java
+|   |   |       |           |       UsableIntegralMapper.xml
+|   |   |       |           |
+|   |   |       |           +---service
+|   |   |       |           |   |   IUsableIntegralService.java
+|   |   |       |           |   |
+|   |   |       |           |   \---impl
+|   |   |       |           |           UsableIntegralServiceImpl.java
+|   |   |       |           |
+|   |   |       |           \---web
+|   |   |       |               +---advice
+|   |   |       |               |       IntergralControllerAdvice.java
+|   |   |       |               |
+|   |   |       |               +---config
+|   |   |       |               |       WebConfig.java
+|   |   |       |               |
+|   |   |       |               +---controller
+|   |   |       |               |       IntegralController.java
+|   |   |       |               |
+|   |   |       |               +---feign
+|   |   |       |               |   \---to
+|   |   |       |               |           OrderPayIntegralFeignClient.java
+|   |   |       |               |
+|   |   |       |               \---msg
+|   |   |       |                       IntergralCodeMsg.java
+|   |   |       |
+|   |   |       \---resources
+|   |   |               bootstrap.yml
+|   |   |
+|   +---job-server
+|   |   |   job-server.iml
+|   |   |   pom.xml
+|   |   |
+|   |   +---src
+|   |   |   \---main
+|   |   |       +---java
+|   |   |       |   \---cn
+|   |   |       |       \---wolfcode
+|   |   |       |           |   JobApplication.java
+|   |   |       |           |
+|   |   |       |           +---config
+|   |   |       |           |       BusinessJobConfig.java
+|   |   |       |           |       RegistryCenterConfig.java
+|   |   |       |           |
+|   |   |       |           +---feign
+|   |   |       |           |   |   SeckillProductFeignApi.java
+|   |   |       |           |   |
+|   |   |       |           |   \---fallback
+|   |   |       |           |           SeckillProductFallback.java
+|   |   |       |           |
+|   |   |       |           +---job
+|   |   |       |           |       SeckillProductJob.java
+|   |   |       |           |       UserCacheJob.java
+|   |   |       |           |
+|   |   |       |           +---redis
+|   |   |       |           |       JobRedisKey.java
+|   |   |       |           |
+|   |   |       |           +---util
+|   |   |       |           |       ElasticJobUtil.java
+|   |   |       |           |
+|   |   |       |           \---web
+|   |   |       |               \---config
+|   |   |       |                       WebConfig.java
+|   |   |       |
+|   |   |       \---resources
+|   |   |               bootstrap.yml
+|   |   |
+|   +---pay-server
+|   |   |   pay-server.iml
+|   |   |   pom.xml
+|   |   |
+|   |   +---src
+|   |   |   \---main
+|   |   |       +---java
+|   |   |       |   \---cn
+|   |   |       |       \---wolfcode
+|   |   |       |           |   PayApplication.java
+|   |   |       |           |
+|   |   |       |           +---config
+|   |   |       |           |       AlipayConfig.java
+|   |   |       |           |       AlipayProperties.java
+|   |   |       |           |
+|   |   |       |           \---web
+|   |   |       |               +---advice
+|   |   |       |               |       PayControllerAdvice.java
+|   |   |       |               |
+|   |   |       |               +---config
+|   |   |       |               |       WebConfig.java
+|   |   |       |               |
+|   |   |       |               +---controller
+|   |   |       |               |   |   AlipayController.java
+|   |   |       |               |   |
+|   |   |       |               |   \---feign
+|   |   |       |               |       \---to
+|   |   |       |               |               OrderPayOnlineFeignClient.java
+|   |   |       |               |
+|   |   |       |               \---msg
+|   |   |       |                       PayCodeMsg.java
+|   |   |       |
+|   |   |       \---resources
+|   |   |               bootstrap.yml
+|   |   |
+|   +---product-server
+|   |   |   pom.xml
+|   |   |   product-server.iml
+|   |   |
+|   |   +---src
+|   |   |   \---main
+|   |   |       +---java
+|   |   |       |   \---cn
+|   |   |       |       \---wolfcode
+|   |   |       |           |   ProductApplication.java
+|   |   |       |           |
+|   |   |       |           +---mapper
+|   |   |       |           |       ProductMapper.java
+|   |   |       |           |       ProductMapper.xml
+|   |   |       |           |
+|   |   |       |           +---service
+|   |   |       |           |   |   IProductService.java
+|   |   |       |           |   |
+|   |   |       |           |   \---impl
+|   |   |       |           |           ProductServiceImpl.java
+|   |   |       |           |
+|   |   |       |           \---web
+|   |   |       |               +---advice
+|   |   |       |               |       ProductControllerAdvice.java
+|   |   |       |               |
+|   |   |       |               +---config
+|   |   |       |               |       WebConfig.java
+|   |   |       |               |
+|   |   |       |               +---controller
+|   |   |       |               |       ProductController.java
+|   |   |       |               |
+|   |   |       |               +---feign
+|   |   |       |               |       ProductFeignClient.java
+|   |   |       |               |
+|   |   |       |               \---msg
+|   |   |       |                       ProductCodeMsg.java
+|   |   |       |
+|   |   |       \---resources
+|   |   |               bootstrap.yml
+|   |   |
+|   \---seckill-server
+|       |   pom.xml
+|       |   seckill-server.iml
+|       |
+|       +---src
+|       |   \---main
+|       |       +---java
+|       |       |   \---cn
+|       |       |       \---wolfcode
+|       |       |           |   SeckillApplication.java
+|       |       |           |
+|       |       |           +---mapper
+|       |       |           |       OrderInfoMapper.java
+|       |       |           |       OrderInfoMapper.xml
+|       |       |           |       PayLogMapper.java
+|       |       |           |       PayLogMapper.xml
+|       |       |           |       RefundLogMapper.java
+|       |       |           |       RefundLogMapper.xml
+|       |       |           |       SeckillProductMapper.java
+|       |       |           |       SeckillProductMapper.xml
+|       |       |           |
+|       |       |           +---mq
+|       |       |           |       MQConstant.java
+|       |       |           |       OrderMessage.java
+|       |       |           |       OrderMQResult.java
+|       |       |           |       OrderPeddingQueueListener.java
+|       |       |           |       OrderPeddingTimeoutListener.java
+|       |       |           |       OrderResultFailedListener.java
+|       |       |           |
+|       |       |           +---service
+|       |       |           |   |   IOrderInfoService.java
+|       |       |           |   |   ISeckillProductService.java
+|       |       |           |   |
+|       |       |           |   \---impl
+|       |       |           |           OrderInfoSeviceImpl.java
+|       |       |           |           SeckillProductServiceImpl.java
+|       |       |           |
+|       |       |           +---util
+|       |       |           |       DateUtil.java
+|       |       |           |       IdGenerateUtil.java
+|       |       |           |       UserUtil.java
+|       |       |           |
+|       |       |           \---web
+|       |       |               +---advice
+|       |       |               |       SeckillControllerAdvice.java
+|       |       |               |
+|       |       |               +---config
+|       |       |               |       WebConfig.java
+|       |       |               |
+|       |       |               +---controller
+|       |       |               |       OrderInfoController.java
+|       |       |               |       OrderPayController.java
+|       |       |               |       SeckillProductController.java
+|       |       |               |       TestController.java
+|       |       |               |
+|       |       |               +---feign
+|       |       |               |   |   OrderPayIntegralFeignApi.java
+|       |       |               |   |   OrderPayOnlineFeignApi.java
+|       |       |               |   |   ProductFeignApi.java
+|       |       |               |   |
+|       |       |               |   +---fallback
+|       |       |               |   |       OrderPayIntegralFallback.java
+|       |       |               |   |       OrderPayOnlineFallback.java
+|       |       |               |   |       ProductFenApiFallback.java
+|       |       |               |   |
+|       |       |               |   \---to
+|       |       |               |           SeckillProductClient.java
+|       |       |               |
+|       |       |               \---msg
+|       |       |                       SeckillCodeMsg.java
+|       |       |
+|       |       \---resources
+|       |               bootstrap.yml
+|       |
++---shop-provider-api
+|   |   pom.xml
+|   |
+|   +---intergral-api
+|   |   |   pom.xml
+|   |   |
+|   |   +---src
+|   |   |   \---main
+|   |   |       \---java
+|   |   |           \---cn
+|   |   |               \---wolfcode
+|   |   |                   \---domain
+|   |   |                           AccountTransaction.java
+|   |   |                           OperateIntergralVo.java
+|   |   |                           UsableIntegral.java
+|   |   |
+|   |   \---target
+|   |       +---classes
+|   |       |   \---cn
+|   |       |       \---wolfcode
+|   |       |           \---domain
+|   |       |                   AccountTransaction.class
+|   |       |                   OperateIntergralVo.class
+|   |       |                   UsableIntegral.class
+|   |       |
+|   |       \---generated-sources
+|   |           \---annotations
+|   +---pay-api
+|   |   |   pom.xml
+|   |   |
+|   |   +---src
+|   |   |   \---main
+|   |   |       \---java
+|   |   |           \---cn
+|   |   |               \---wolfcode
+|   |   |                   \---domain
+|   |   |                           PayVo.java
+|   |   |                           RefundVo.java
+|   |   |
+|   +---product-api
+|   |   |   pom.xml
+|   |   |
+|   |   +---src
+|   |   |   \---main
+|   |   |       \---java
+|   |   |           \---cn
+|   |   |               \---wolfcode
+|   |   |                   \---domain
+|   |   |                           Product.java
+|   |   |
+|   \---seckill-api
+|       |   pom.xml
+|       |
+|       +---src
+|       |   \---main
+|       |       \---java
+|       |           \---cn
+|       |               \---wolfcode
+|       |                   +---domain
+|       |                   |       OrderInfo.java
+|       |                   |       PayLog.java
+|       |                   |       RefundLog.java
+|       |                   |       SeckillProduct.java
+|       |                   |       SeckillProductVo.java
+|       |                   |
+|       |                   \---redis
+|       |                           SeckillRedisKey.java
+|       |
++---shop-uaa
+|   |   pom.xml
+|   |   shop-uaa.iml
+|   |
+|   +---src
+|   |   \---main
+|   |       +---java
+|   |       |   \---cn
+|   |       |       \---wolfcode
+|   |       |           |   UaaApplication.java
+|   |       |           |
+|   |       |           +---domain
+|   |       |           |       LoginLog.java
+|   |       |           |       UserLogin.java
+|   |       |           |       UserResponse.java
+|   |       |           |
+|   |       |           +---mapper
+|   |       |           |       UserMapper.java
+|   |       |           |       UserMapper.xml
+|   |       |           |
+|   |       |           +---mq
+|   |       |           |       MQConstant.java
+|   |       |           |       MQLoginLogListener.java
+|   |       |           |
+|   |       |           +---redis
+|   |       |           |       UaaRedisKey.java
+|   |       |           |
+|   |       |           +---service
+|   |       |           |   |   IUserService.java
+|   |       |           |   |
+|   |       |           |   \---impl
+|   |       |           |           UserServiceImpl.java
+|   |       |           |
+|   |       |           +---util
+|   |       |           |       MD5Util.java
+|   |       |           |
+|   |       |           \---web
+|   |       |               +---advice
+|   |       |               |       UAAControllerAdvice.java
+|   |       |               |
+|   |       |               +---config
+|   |       |               |       WebConfig.java
+|   |       |               |
+|   |       |               +---controller
+|   |       |               |       LoginController.java
+|   |       |               |       TokenController.java
+|   |       |               |
+|   |       |               \---msg
+|   |       |                       UAACodeMsg.java
+|   |       |
+|   |       \---resources
+|   |               bootstrap.yml
+|   |
++---websocket-server
+|   |   pom.xml
+|   |   websocket-server.iml
+|   |
+|   +---src
+|   |   \---main
+|   |       +---java
+|   |       |   \---cn
+|   |       |       \---wolfcode
+|   |       |           |   WebsocketServerApplication.java
+|   |       |           |
+|   |       |           +---config
+|   |       |           |       WebSocketConfig.java
+|   |       |           |
+|   |       |           +---controller
+|   |       |           |       OrderWebSocketController.java
+|   |       |           |
+|   |       |           +---mq
+|   |       |           |       MQConstants.java
+|   |       |           |       OrderMQResult.java
+|   |       |           |       OrderResultQueueListener.java
+|   |       |           |
+|   |       |           \---ws
+|   |       |                   OrderWebSocketServer.java
+|   |       |
+|   |       \---resources
+|   |               bootstrap.yml
+|   |
+\---配置文件
+    +---nacos配置
+    |       nacos_config_export.zip
+    |
+    \---SQL脚本
+            shop-intergral.sql
+            shop-product.sql
+            shop-seckill.sql
+            shop-uaa.sql
+```
 
 #### 软件架构
 软件架构说明
