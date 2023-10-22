@@ -15,7 +15,7 @@ springcloudalibaba、redis、rocketmq、canal、wobsocket、elastic-job、zookee
 
 #### 项目截图
 ![输入图片说明](frontend-server/src/main/resources/static/img/038c7b32d406e7a17c1934489893188.png)
-![输入图片说明](frontend-server/src/main/resources/static/img/cb6a553201d33dbc999576cbe915f06.png)
+
 
 #### 代码结构
 ```
